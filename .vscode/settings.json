@@ -1,0 +1,26 @@
+{
+  // latexmk is not installed on this system (spawn ENOENT); build with pdflatex directly.
+  "latex-workshop.latex.tools": [
+    {
+      "name": "pdflatex",
+      "command": "pdflatex",
+      "args": [
+        "-interaction=nonstopmode",
+        "-synctex=1",
+        "-file-line-error",
+        "%DOC%"
+      ],
+      "env": {
+        "TEXMFHOME": "%WORKSPACE_FOLDER%/.texmf"
+      }
+    }
+  ],
+  "latex-workshop.latex.recipes": [
+    {
+      "name": "pdflatex",
+      "tools": ["pdflatex"]
+    }
+  ],
+  "latex-workshop.latex.recipe.default": "pdflatex",
+  "latex-workshop.latex.autoBuild.run": "onSave"
+}
