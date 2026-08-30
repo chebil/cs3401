@@ -291,13 +291,13 @@ int gcd(int m, int n) {
         \begin{itemize}
           \item No function-call overhead
           \item Constant stack space
-          \item Same time complexity \bigO{\log n}
+          \item Same time complexity $\mathcal{O}(\log \min(m,n))$
         \end{itemize}
       \end{exampleblock}
     \column{0.45\textwidth}
       \begin{block}{Convergence guarantee}
         After two consecutive iterations, the second argument
-        decreases by \emph{at least half} — hence $\mathcal{O}(\log n)$.
+        decreases by \emph{at least half} — hence $\mathcal{O}(\log \min(m,n))$.
       \end{block}
   \end{columns}
 \end{frame}
@@ -331,8 +331,7 @@ int gcd(int m, int n) {
       \vspace{0.4em}
       \textbf{Example:} $\gcd(60,24)$
       \begin{itemize}
-        \item $t=24$: $24 \nmid 60$ $\times$
-        \item $t=23\ldots13$: $\times$ (11 wasted steps)
+        \item $t=24\ldots13$: 12 wasted steps
         \item $t=12$: $12 \mid 60$ and $12 \mid 24$ $\checkmark$
       \end{itemize}
   \end{columns}
@@ -380,8 +379,9 @@ int gcd(int m, int n) {
   \textbf{Goal:} Produce all primes $\leq n$ (needed by the middle-school method).
   \vspace{0.2em}
   \begin{columns}[T]
-    \column{0.52\textwidth}
+    \column{0.36\textwidth}
       \begin{block}{Pseudocode}
+        \scriptsize
         \begin{algorithmic}[1]
           \For{$p \gets 2$ \textbf{to} $n$}\; $A[p] \gets p$ \EndFor
           \For{$p \gets 2$ \textbf{to} $\lfloor\sqrt{n}\rfloor$}
@@ -395,22 +395,29 @@ int gcd(int m, int n) {
           \State Output all $A[p] \neq 0$
         \end{algorithmic}
       \end{block}
-    \column{0.43\textwidth}
-      \textbf{Trace for $n = 25$:}
+    \column{0.60\textwidth}
+      \textbf{Trace for $n = 25$} (successive passes, $p = 2,3,5$):
       \vspace{0.3em}
 
-      \setlength{\tabcolsep}{3pt}
-      \begin{tabular}{*{8}{c}}
-        2 & 3 & \cellcolor{gray!20}\sout{4} & 5 &
-        \cellcolor{gray!20}\sout{6} & 7 &
-        \cellcolor{gray!20}\sout{8} & \cellcolor{gray!20}\sout{9} \\[2pt]
-        \cellcolor{gray!20}\sout{10} & 11 & \cellcolor{gray!20}\sout{12} & 13 &
-        \cellcolor{gray!20}\sout{14} & \cellcolor{gray!20}\sout{15} &
-        \cellcolor{gray!20}\sout{16} & 17 \\[2pt]
-        \cellcolor{gray!20}\sout{18} & 19 & \cellcolor{gray!20}\sout{20} &
-        \cellcolor{gray!20}\sout{21} & \cellcolor{gray!20}\sout{22} & 23 &
-        \cellcolor{gray!20}\sout{24} & \cellcolor{gray!20}\sout{25} \\
-      \end{tabular}
+      \setlength{\tabcolsep}{1.5pt}
+      \renewcommand{\arraystretch}{1.15}
+      \resizebox{\linewidth}{!}{%
+      \begin{tabular}{*{24}{c}}
+        2 & 3 & \cellcolor{SuccessGreen!30}4 & 5 & \cellcolor{SuccessGreen!30}6 & 7 &
+        \cellcolor{SuccessGreen!30}8 & 9 & \cellcolor{SuccessGreen!30}10 & 11 &
+        \cellcolor{SuccessGreen!30}12 & 13 & \cellcolor{SuccessGreen!30}14 & 15 &
+        \cellcolor{SuccessGreen!30}16 & 17 & \cellcolor{SuccessGreen!30}18 & 19 &
+        \cellcolor{SuccessGreen!30}20 & 21 & \cellcolor{SuccessGreen!30}22 & 23 &
+        \cellcolor{SuccessGreen!30}24 & 25 \\[3pt]
+        \textcolor{AlertRed}{\bfseries 2} & 3 & & 5 & & 7 & &
+        \cellcolor{AccentYellow!40}9 & & 11 & & 13 & &
+        \cellcolor{AccentYellow!40}15 & & 17 & & 19 & &
+        \cellcolor{AccentYellow!40}21 & & 23 & & 25 \\[3pt]
+        2 & \textcolor{AlertRed}{\bfseries 3} & & 5 & & 7 & & & & 11 & & 13 &
+        & & & 17 & & 19 & & & & 23 & & \cellcolor{AccentOrange!40}25 \\[3pt]
+        2 & 3 & & \textcolor{AlertRed}{\bfseries 5} & & 7 & & & & 11 & & 13 &
+        & & & 17 & & 19 & & & & 23 & & \\
+      \end{tabular}}
       \vspace{0.4em}
 
       Primes $\leq 25$: \textbf{2,\,3,\,5,\,7,\,11,\,13,\,17,\,19,\,23}
@@ -528,11 +535,11 @@ int gcd(int m, int n) {
       \textbf{NN from point 4 (value 0):}
       \begin{itemize}
         \item Visit 5 (dist 1), then 3 (dist 2), then 2 (dist 4),
-              then 1 (dist 16), back to 4 (dist 22)
-        \item Total: \important{45 units}
+              then 1 (dist 16), back to 4 (dist 21)
+        \item Total: \important{44 units}
       \end{itemize}
       {\scriptsize\textbf{Optimal tour:} 1→2→3→4→5→1 =
-      \highlight{26 units}
+      \highlight{22 units}
       }
     \column{0.40\textwidth}
       \begin{alertblock}{Conclusion}
