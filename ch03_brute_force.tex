@@ -23,7 +23,7 @@
 \section{Introduction to Brute Force}
 % ============================================================
 
-\begin{frame}[shrink=12]{What is Brute Force?}
+\begin{frame}[shrink=16]{What is Brute Force?}
   \begin{block}{Definition}
     A \keyword{brute-force} algorithm solves a problem by following the
     problem's definition directly, without any clever optimisation — often
@@ -37,6 +37,7 @@
         \item \concept{Simple to implement} — close to the definition
         \item \concept{Good baseline} — reveals the problem's structure
         \item \concept{Works for small $n$} — practical when $n \leq 20$
+        \item \concept{Guaranteed to find a solution} if one exists
       \end{itemize}
     \column{0.48\textwidth}
       \textbf{Disadvantages}
@@ -47,7 +48,7 @@
       \end{itemize}
       \begin{exampleblock}{When to use it}
         When $n$ is small, when you need a correct reference
-        implementation, or when no better algorithm is known.
+        implementation, or when no better algorithm is known. A baseline for comparing more advanced algorithms.
       \end{exampleblock}
   \end{columns}
 \end{frame}
@@ -127,6 +128,10 @@
         C(n)=\sum_{i=0}^{n-2}(n-1-i)=\frac{(n-1)n}{2}\in\Theta(n^2)
       \]
       Stable: \important{No} \quad In-place: \textcolor{SuccessGreen}{Yes}
+      \begin{itemize}
+        \item \important{Stable}: Equal elements remain in their relative order.
+        \item \important{In-place}: Uses only a constant amount of extra memory.
+      \end{itemize}
   \end{columns}
 \end{frame}
 
@@ -491,10 +496,11 @@
 \section{BFS — Exhaustive Graph Search}
 % ============================================================
 
-\begin{frame}[shrink=12]{Shortest Path via Breadth-First Search}
+\begin{frame}{Shortest Path via Breadth-First Search}
   \begin{columns}[T]
-    \column{0.50\textwidth}
+    \column{0.44\textwidth}
       \begin{block}{BFS Algorithm}
+        \scriptsize
         \begin{algorithmic}[1]
           \Require Graph $G$, source $s$, target $t$
           \State Enqueue $s$; $\text{parent}[s] \gets \text{null}$
@@ -511,38 +517,67 @@
           \State Trace back via \texttt{parent} to get path
         \end{algorithmic}
       \end{block}
-    \column{0.45\textwidth}
-      \begin{tikzpicture}[
-        nd/.style={circle,draw=PrimaryMid,fill=PrimaryLight!50,
-                   font=\bfseries\small,minimum size=0.65cm},
-        vis/.style={circle,draw=AccentOrange,fill=AccentOrange!20,
-                    font=\bfseries\small,minimum size=0.65cm},
-        arr/.style={-{Stealth},PrimaryMid,thick}
-      ]
-        \node[nd] (A) at (0,2.5) {A};
-        \node[nd] (G) at (1.5,2.5) {G};
-        \node[nd] (J) at (3.0,2.5) {J};
-        \node[nd] (C) at (0.5,1.2) {C};
-        \node[nd] (F) at (2.0,1.2) {F};
-        \node[nd] (B) at (0,0) {B};
-        \node[nd] (D) at (1.5,0) {D};
-        \node[nd] (H) at (3.0,0) {H};
-        \draw (A)--(G)--(J); \draw (A)--(C)--(F)--(J);
-        \draw (A)--(B)--(D)--(H);
-        \draw (G)--(D); \draw (G)--(F);
-        % BFS tree highlighted
-        \draw[AccentOrange,very thick,->]
-          (A)edge(G) (G)edge(J) (G)edge(D) (A)edge(C) (A)edge(B)
-          (B)edge[dashed,gray!50](D) (D)edge(H) (C)edge[dashed,gray!50](F);
-        \node[font=\tiny,text=AccentOrange] at (1.5,-0.6)
-          {BFS tree from A; shortest path A→J = A→G→J};
-      \end{tikzpicture}
+    \column{0.52\textwidth}
+      \begin{columns}[T,onlytextwidth]
+        \column{0.68\textwidth}
+          \begin{tikzpicture}[
+            scale=0.95,
+            nd/.style={circle,draw=PrimaryMid,fill=PrimaryLight!50,
+                       font=\bfseries\small,minimum size=0.62cm},
+            path/.style={circle,draw=AccentOrange,fill=AccentOrange!25,
+                         font=\bfseries\small,minimum size=0.62cm}
+          ]
+            \node[path] (A) at (0,2.5) {A};
+            \node[path] (G) at (1.5,2.5) {G};
+            \node[path] (J) at (3.0,2.5) {J};
+            \node[nd] (C) at (0.5,1.2) {C};
+            \node[nd] (F) at (2.0,1.2) {F};
+            \node[nd] (B) at (0,0) {B};
+            \node[nd] (D) at (1.5,0) {D};
+            \node[nd] (H) at (3.0,0) {H};
+            \draw[gray!65] (A)--(G)--(J) (A)--(C)--(F)--(J)
+              (A)--(B)--(D)--(H) (G)--(D) (G)--(F);
+            \draw[PrimaryMid,very thick,->]
+              (A)edge(B) (A)edge(C) (A)edge(G) (B)edge(D)
+              (C)edge(F) (G)edge(J) (D)edge(H);
+            \draw[AccentOrange,ultra thick,->] (A)--(G)--(J);
+          \end{tikzpicture}\par
+          \centering\small\textcolor{AccentOrange}{Shortest path: $A\to G\to J$}
+        \column{0.29\textwidth}
+          \centering\scriptsize
+          \textbf{Parents}\par\smallskip
+          \begin{tabular}{>{\bfseries}c|c}
+            \rowcolor{PrimaryDark}\color{white}Node & \color{white}Parent \\
+            \rowcolor{AccentOrange!30} A & -- \\
+            B & A \\
+            \rowcolor{PrimaryLight!45} C & A \\
+            \rowcolor{AccentOrange!30} G & A \\
+            D & B \\
+            \rowcolor{PrimaryLight!45} F & C \\
+            \rowcolor{AccentOrange!30} J & G \\
+            H & D
+          \end{tabular}
+      \end{columns}
+      \vspace{0.25em}
+
+      \centering\scriptsize
+      \textbf{Queue trace (front at left)}\par\smallskip
+      {\setlength{\tabcolsep}{2.5pt}
+      \begin{tabular}{c l|c l}
+        \toprule
+        \textbf{Processed} & \textbf{Queue} & \textbf{Processed} & \textbf{Queue} \\
+        \midrule
+        Start & $[A]$       & G & $[D,F,J]$ \\
+        A & $[B,C,G]$       & D & $[F,J,H]$ \\
+        B & $[C,G,D]$       & F & $[J,H]$ \\
+        C & $[G,D,F]$       & \cellcolor{AccentOrange!25}J & \cellcolor{AccentOrange!25}$[H]$; stop \\
+        \bottomrule
+      \end{tabular}}
   \end{columns}
-  \vspace{0.3em}
-  \begin{block}{Complexity}
-    $\mathcal{O}(|V| + |E|)$ — visits every vertex and edge at most once.
-    BFS guarantees \emph{shortest path} (minimum edges) in unweighted graphs.
-  \end{block}
+  \vspace{-0.35em}
+  \scriptsize
+  \quad
+  Complexity: $\mathcal{O}(|V|+|E|)$
 \end{frame}
 
 % ── Chapter Summary ──────────────────────────────────────────
